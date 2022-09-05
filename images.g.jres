@@ -1,0 +1,17 @@
+{
+    "image1": {
+        "data": "hwQQABAAAADw////////D////////////wAAAAAAAP//AAAAAAAA//8AAAAAAAD//wAAAAAAAP//AAAAAAAA//8AAAAAAAD//wAAAAAAAP//AAAAAAAA//8AAAAAAAD//wAAAAAAAP//AAAAAAAA//8AAAAAAAD////////////w////////Dw==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "blackCursor"
+    },
+    "image2": {
+        "data": "hwQQABAAAAAQERERERERAREREREREREREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREREREREREREQERERERERAQ==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "whiteCursor"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}
