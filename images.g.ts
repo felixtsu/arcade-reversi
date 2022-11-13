@@ -52,5 +52,12 @@ f f f f f f f f f f f f f f f f
         return null;
     })
 
+    helpers._registerFactory("song", function(name: string) {
+        switch(helpers.stringTrim(name)) {
+
+        }
+        return null;
+    })
+
 }
 // 自动生成的代码。请勿编辑。
