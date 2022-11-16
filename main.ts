@@ -13,6 +13,8 @@ namespace reversi {
     const ROW_MAX = 7;
     const ROW_MIN = 0;
 
+    const TURN_TIME = 15;
+
     let currentPlayer = Player.BLACK;
 
     function isBlackTurn() {
@@ -30,6 +32,15 @@ namespace reversi {
     }
 
     function switchPlayer() {
+        if (info.player1.score() == 0) {
+            game.showLongText("White wins.", DialogLayout.Bottom)
+            game.reset()
+        }
+        if (info.player2.score() == 0) {
+            game.showLongText("Black wins.", DialogLayout.Bottom)
+            game.reset()
+        }
+
         if (isBlackTurn()) {
             currentPlayer = Player.WHITE;
             cursor.setImage(assets.image`whiteCursor`)
@@ -37,8 +48,10 @@ namespace reversi {
             currentPlayer = Player.BLACK;
             cursor.setImage(assets.image`blackCursor`)
         }
-        
+        info.startCountdown(TURN_TIME)
     }
+
+
 
     function reversiImpl(column: number, row: number, direction: number[], player:Player): number {
         if (row < ROW_MIN || row > ROW_MAX || column < COL_MIN || column > COL_MAX) {
@@ -99,7 +112,6 @@ namespace reversi {
         let loc = tiles.locationOfSprite(cursor)
         if (tiles.getTileAt(loc.column, loc.row) == sprites.dungeon.floorLight2
             && reversi(loc.row, loc.column, currentPlayer)) {
-            //TODO should check whether can reversi
             place()
             return true;
         } else {
@@ -134,39 +146,77 @@ namespace reversi {
         }
     }
 
-    controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+
+    function aPressed(player:Player) {
+        if (player != currentPlayer) {
+            return;
+        }
         if (tryToPlace()) {
             switchPlayer()
         } else {
             scene.cameraShake();
         }
-        
-    })
 
-    controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
+    }
+
+    function upPressed(player: Player)  {
+        if (player != currentPlayer) {
+            return;
+        }
         let loc = tiles.locationOfSprite(cursor);
         if (loc.row != ROW_MIN) {
             tiles.placeOnTile(cursor, tiles.getTileLocation(loc.col, loc.row - 1))
         }
-    })
-    controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    }
+
+    function downPressed(player:Player) {
+        if (player != currentPlayer) {
+            return;
+        }
         let loc = tiles.locationOfSprite(cursor);
         if (loc.row != ROW_MAX) {
             tiles.placeOnTile(cursor, tiles.getTileLocation(loc.col, loc.row + 1))
         }
-    })
-    controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    }
+
+    function leftPressed(player:Player) {
+        if (player != currentPlayer) {
+            return;
+        }
         let loc = tiles.locationOfSprite(cursor);
         if (loc.col != COL_MIN) {
             tiles.placeOnTile(cursor, tiles.getTileLocation(loc.col - 1, loc.row))
         }
-    })
-    controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    }
+
+    function rightPressed(player: Player) {
+        if (player != currentPlayer) {
+            return;
+        }
         let loc = tiles.locationOfSprite(cursor);
         if (loc.col != COL_MAX) {
             tiles.placeOnTile(cursor, tiles.getTileLocation(loc.col + 1, loc.row))
         }
-    })
+    }
+
+    controller.A.onEvent(ControllerButtonEvent.Pressed, () => { aPressed(Player.BLACK)})
+    controller.player2.A.onEvent(ControllerButtonEvent.Pressed, () => { aPressed(Player.WHITE) })
+
+    controller.up.onEvent(ControllerButtonEvent.Pressed, () => { upPressed(Player.BLACK)})
+    controller.player2.up.onEvent(ControllerButtonEvent.Pressed, () => { upPressed(Player.WHITE) })
+
+    controller.down.onEvent(ControllerButtonEvent.Pressed, () => { downPressed(Player.BLACK) })
+    controller.player2.down.onEvent(ControllerButtonEvent.Pressed, () => { downPressed(Player.WHITE) })
+
+
+    controller.left.onEvent(ControllerButtonEvent.Pressed, () => { leftPressed(Player.BLACK)} )
+    controller.player2.left.onEvent(ControllerButtonEvent.Pressed, () => { leftPressed(Player.WHITE) })
+
+
+    controller.right.onEvent(ControllerButtonEvent.Pressed, () => { rightPressed(Player.BLACK) } )
+    controller.player2.right.onEvent(ControllerButtonEvent.Pressed, () => { rightPressed(Player.WHITE) })
+
+
     tiles.setCurrentTilemap(tilemap`级别`)
     let cursor = sprites.create(assets.image`blackCursor`, SpriteKind.Player)
     tiles.placeOnTile(cursor, tiles.getTileLocation(5,5))
@@ -183,4 +233,7 @@ namespace reversi {
     info.player2.border = 1
     info.player2.bg = 1
     info.player2.fc = 15
+
+    info.startCountdown(TURN_TIME)
+    info.onCountdownEnd(switchPlayer)
 }
