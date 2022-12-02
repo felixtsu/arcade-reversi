@@ -108,11 +108,23 @@ namespace reversi {
         }
     }
 
+    function announceWinner() {
+        if (info.player1.score() < info.player2.score()) {
+            game.showLongText("White wins.", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Black wins.", DialogLayout.Bottom)
+        }
+        game.reset()
+    }
+
     function tryToPlace() :boolean {
         let loc = tiles.locationOfSprite(cursor)
         if (tiles.getTileAt(loc.column, loc.row) == sprites.dungeon.floorLight2
             && reversi(loc.row, loc.column, currentPlayer)) {
             place()
+            if (info.player1.score() + info.player2.score() == 64) {
+                announceWinner()
+            }
             return true;
         } else {
             return false;
